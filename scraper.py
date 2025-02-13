@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from collections import defaultdict
 import time
+from collections import Counter
 
 username = "Zciwolvo"
 base_url = f"https://github.com/{username}?tab=repositories"
@@ -18,6 +19,35 @@ about = soup.select_one('div.user-profile-bio')
 repositories = soup.select_one('a[href*="?tab=repositories"] span.Counter')
 website = soup.select_one('li[data-test-selector="profile-website-url"] a')
 social_links = soup.select('li[itemprop="social"] a')
+achievements = soup.select('a[href*="achievement="]')
+
+
+achievement_counts = defaultdict(int)
+processed_achievements = set()  # Zbiór do przechowywania unikalnych osiągnięć
+
+for achievement in achievements:
+    href = achievement.get("href")
+    if href:
+        # Ekstrakcja nazwy osiągnięcia
+        name = href.split("achievement=")[-1].split("&")[0].replace("-", " ").title()
+
+        # Sprawdzamy, czy już dodaliśmy to osiągnięcie
+        if name in processed_achievements:
+            continue  # Jeśli już je mamy, pomijamy
+
+        # Pobieramy ewentualny mnożnik (x2, x3 itp.)
+        multiplier_tag = achievement.select_one("span.achievement-tier-label")
+        multiplier = 1  # Domyślnie jedno osiągnięcie
+
+        if multiplier_tag and multiplier_tag.text.strip().startswith("x"):
+            try:
+                multiplier = int(multiplier_tag.text.strip().replace("x", ""))
+            except ValueError:
+                pass  # Jeśli coś pójdzie nie tak, zostawiamy domyślne 1
+
+        # Dodajemy do licznika
+        achievement_counts[name] += multiplier
+        processed_achievements.add(name)  # Oznaczamy osiągnięcie jako przetworzone
 
 
 if followers:
@@ -48,6 +78,14 @@ if website:
     print(f"Strona osobista: {website['href']}")
 else:
     print("Brak strony osobistej!")
+    
+if achievement_counts:
+    print("🏆 Achievements:")
+    for name, count in achievement_counts.items():
+        print(f" - {name}: {count}")
+else:
+    print("Brak osiągnięć!")
+
 
 # Pobieranie języków programowania z repozytoriów
 repo_languages = defaultdict(int)
