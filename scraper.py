@@ -4,7 +4,7 @@ from collections import defaultdict
 import time
 from collections import Counter
 
-username = "Zciwolvo"
+username = "Rucol"
 base_url = f"https://github.com/{username}?tab=repositories"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
