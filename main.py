@@ -3,37 +3,32 @@ from scraper import GitHubScraper
 from analyzer import analyze_with_gemini
 from report_generator import generate_pdf
 
-def main(url: str):
-    """Główna funkcja aplikacji przetwarzająca profil GitHub i generująca raport PDF."""
-
-    scraper = GitHubScraper()
+def main(urls: str):
+    """Główna funkcja aplikacji"""
     
-    #  Obsługa błędów podczas scrapowania
-    try:
-        profile_data = scraper.scrape_github_profile(url)
-    except Exception as e:
-        return f"❌ Błąd podczas pobierania danych: {e}", None
+    scraper = GitHubScraper()
+    results = []
+    pdf_files = []
+    
+    for url in urls.split("\n"):
+        url = url.strip()
+        if not url:
+            continue
+        
+        try:
+            profile_data = scraper.scrape_github_profile(url)
+            if "error" in profile_data:
+                results.append(f" {profile_data['error']}")
+                continue
+            
+            analysis = analyze_with_gemini(profile_data)
+            pdf_file = generate_pdf(profile_data, analysis)
+            pdf_files.append(pdf_file)
+        
+            achievements_text = "\n".join([f"- {achievement}: {count}" for achievement, count in profile_data.get("achievements", {}).items()])
+            languages_text = "\n".join([f"- {lang}: {count}" for lang, count in profile_data.get("languages", {}).items()])
 
-    if "error" in profile_data:
-        return f"❌ {profile_data['error']}", None
-
-    #  Obsługa błędów analizy AI
-    try:
-        analysis = analyze_with_gemini(profile_data)
-    except Exception as e:
-        return f"❌ Błąd podczas analizy AI: {e}", None
-
-    #  Obsługa błędów generowania PDF
-    try:
-        pdf_file = generate_pdf(profile_data, analysis)
-    except Exception as e:
-        return f"❌ Błąd podczas generowania PDF: {e}", None
-
-    #  Bezpieczna konwersja danych do Markdown (zapobieganie błędom formatowania)
-    achievements_text = "\n".join([f"- {achievement}: {count}" for achievement, count in profile_data.get("achievements", {}).items()])
-    languages_text = "\n".join([f"- {lang}: {count}" for lang, count in profile_data.get("languages", {}).items()])
-
-    summary_text = f"""
+            summary_text = f"""
 ### Profil GitHub: [{profile_data.get('username', 'Nieznany użytkownik')}](https://github.com/{profile_data.get('username', '')})
 
 👥 **Followers:**  
@@ -54,18 +49,21 @@ def main(url: str):
 📊 **Analiza AI:**  
 {analysis}
 """
-
-    return summary_text, pdf_file
+            results.append(summary_text)
+        except Exception as e:
+            results.append(f" Błąd dla {url}: {e}")
+    
+    return "\n\n---\n\n".join(results), pdf_files
 
 # Obsługa błędów uruchamiania aplikacji
 try:
     demo = gr.Interface(
         fn=main, 
-        inputs="text", 
+        inputs=gr.Textbox(placeholder="Podaj linki do profili GitHub, każdy w nowej linii", lines=5), 
         outputs=["markdown", "file"],
         title="GitHub Profile Analyzer",
-        description="Podaj link do profilu GitHub, aby uzyskać analizę oraz możliwość pobrania raportu w PDF."
+        description="Podaj linki do profili GitHub (każdy w nowej linii), aby uzyskać analizy oraz pobrać raporty PDF."
     )
     demo.launch()
 except Exception as e:
-    print(f"❌ Błąd podczas uruchamiania aplikacji: {e}")
+    print(f" Błąd podczas uruchamiania aplikacji: {e}")

@@ -12,7 +12,7 @@ try:
         raise FileNotFoundError(f"Nie znaleziono pliku czcionki: {font_path} pobierz czcionke lub zmien")
     pdfmetrics.registerFont(TTFont("DejaVuSans", font_path))
 except Exception as e:
-    print(f"❌ Błąd podczas ładowania czcionki: {e}")
+    print(f" Błąd podczas ładowania czcionki: {e}")
     exit(1)
 
 def generate_pdf(profile_data: dict, analysis: str) -> str:
@@ -20,16 +20,16 @@ def generate_pdf(profile_data: dict, analysis: str) -> str:
 
     #  Sprawdzanie poprawności danych wejściowych
     if not isinstance(profile_data, dict):
-        raise ValueError("❌ profile_data musi być słownikiem")
+        raise ValueError(" profile_data musi być słownikiem")
     if not isinstance(analysis, str):
-        raise ValueError("❌ analysis musi być tekstem")
+        raise ValueError(" analysis musi być tekstem")
 
     #  Bezpieczne generowanie nazwy pliku
     try:
         username = profile_data.get("username", "unknown_user").replace(" ", "_")
         filename = f"{username}_github_summary.pdf"
     except Exception as e:
-        print(f"❌ Błąd przy generowaniu nazwy pliku: {e}")
+        print(f" Błąd przy generowaniu nazwy pliku: {e}")
         return None
 
     doc = SimpleDocTemplate(filename, pagesize=letter)
@@ -40,7 +40,7 @@ def generate_pdf(profile_data: dict, analysis: str) -> str:
     try:
         bio_text = bio_text.encode("utf-8").decode("utf-8")
     except Exception as e:
-        print(f"❌ Błąd przy kodowaniu tekstu bio: {e}")
+        print(f" Błąd przy kodowaniu tekstu bio: {e}")
         bio_text = "Błąd kodowania tekstu"
 
     #  Definicja stylów
@@ -72,7 +72,7 @@ def generate_pdf(profile_data: dict, analysis: str) -> str:
     try:
         doc.build(elements)
     except Exception as e:
-        print(f"❌ Błąd podczas generowania pliku PDF: {e}")
+        print(f" Błąd podczas generowania pliku PDF: {e}")
         return None
 
     return filename
