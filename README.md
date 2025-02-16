@@ -58,7 +58,7 @@ __pycache__/
 
 ## 🏗 TODO / Możliwe ulepszenia
 - [ ] Obsługa API GitHub do bardziej precyzyjnego pobierania danych.
-- [ ] Lepsza obsługa błędów.
+- [ ] Rozszerzenie o dodatkowe witryny takie jak LinkedIn
 - [ ] Możliwość wyboru różnych formatów raportów.
 
 ## 🤝 Współtworzenie
