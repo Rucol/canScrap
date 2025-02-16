@@ -69,4 +69,4 @@ Jeśli chcesz dodać coś od siebie, śmiało otwórz **issue** lub stwórz **pu
 ---
 
 🎉 **Dziękuję za zainteresowanie canScrap!**
-##Twórca: Rucol
+## Twórca: Rucol
