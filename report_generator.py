@@ -5,7 +5,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 import os
 
-# ✅ Bezpieczne wczytywanie czcionki
+#  Bezpieczne wczytywanie czcionki
 try:
     font_path = "DejaVuSans.ttf"
     if not os.path.exists(font_path):
@@ -18,13 +18,13 @@ except Exception as e:
 def generate_pdf(profile_data: dict, analysis: str) -> str:
     """Generowanie raportu PDF z danymi profilu GitHub i analizą AI."""
 
-    # ✅ Sprawdzanie poprawności danych wejściowych
+    #  Sprawdzanie poprawności danych wejściowych
     if not isinstance(profile_data, dict):
         raise ValueError("❌ profile_data musi być słownikiem")
     if not isinstance(analysis, str):
         raise ValueError("❌ analysis musi być tekstem")
 
-    # ✅ Bezpieczne generowanie nazwy pliku
+    #  Bezpieczne generowanie nazwy pliku
     try:
         username = profile_data.get("username", "unknown_user").replace(" ", "_")
         filename = f"{username}_github_summary.pdf"
@@ -35,7 +35,7 @@ def generate_pdf(profile_data: dict, analysis: str) -> str:
     doc = SimpleDocTemplate(filename, pagesize=letter)
     styles = getSampleStyleSheet()
 
-    # ✅ Bezpieczne przetwarzanie bio
+    #  Bezpieczne przetwarzanie bio
     bio_text = profile_data.get("bio", "Brak informacji")
     try:
         bio_text = bio_text.encode("utf-8").decode("utf-8")
@@ -43,12 +43,12 @@ def generate_pdf(profile_data: dict, analysis: str) -> str:
         print(f"❌ Błąd przy kodowaniu tekstu bio: {e}")
         bio_text = "Błąd kodowania tekstu"
 
-    # ✅ Definicja stylów
+    #  Definicja stylów
     title_style = ParagraphStyle("Title", parent=styles["Title"], fontSize=16, spaceAfter=20, fontName="DejaVuSans")
     content_style = ParagraphStyle("Content", parent=styles["Normal"], fontSize=12, fontName="DejaVuSans")
     bullet_style = ParagraphStyle("Bullet", parent=styles["Normal"], fontSize=12, fontName="DejaVuSans", leftIndent=20)
 
-    # ✅ Tworzenie zawartości PDF
+    #  Tworzenie zawartości PDF
     elements = [
         Paragraph(f"📄 <b>Podsumowanie profilu GitHub:</b> {profile_data.get('username', 'unknown_user')}", title_style),
         Spacer(1, 10),
@@ -60,7 +60,7 @@ def generate_pdf(profile_data: dict, analysis: str) -> str:
         Spacer(1, 10),
     ]
 
-    # ✅ Obsługa listy punktowanej w analizie
+    #  Obsługa listy punktowanej w analizie
     analysis_lines = analysis.split("\n")
     for line in analysis_lines:
         if line.strip():
@@ -68,7 +68,7 @@ def generate_pdf(profile_data: dict, analysis: str) -> str:
             elements.append(Paragraph(line, paragraph_style))
         elements.append(Spacer(1, 5))
 
-    # ✅ Generowanie PDF z obsługą błędów
+    #  Generowanie PDF z obsługą błędów
     try:
         doc.build(elements)
     except Exception as e:

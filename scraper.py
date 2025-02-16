@@ -14,7 +14,7 @@ class GitHubScraper:
 
     def __init__(self):
         """Inicjalizacja klasy, ustawienie logowania."""
-        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")  # ✅ Dodano logowanie
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")  # logowanie
 
     @staticmethod
     def extract_username(url: str) -> str:
@@ -25,11 +25,11 @@ class GitHubScraper:
     def get_soup(self, url: str):
         """Pobranie i sparsowanie strony, obsługa błędów HTTP."""
         try:
-            response = requests.get(url, headers=self.HEADERS, timeout=10)  # ✅ Dodano obsługę timeout
-            response.raise_for_status()  # ✅ Obsługa błędów HTTP
+            response = requests.get(url, headers=self.HEADERS, timeout=10)  #  obsługa timeout
+            response.raise_for_status()  #  Obsługa błędów HTTP
             return BeautifulSoup(response.text, "html.parser")
         except requests.exceptions.RequestException as e:
-            logging.error(f"Błąd podczas pobierania strony: {url} - {e}")  # ✅ Obsługa błędów za pomocą logging
+            logging.error(f"Błąd podczas pobierania strony: {url} - {e}")  #  Obsługa błędów za pomocą logging
             return None
 
     def scrape_github_profile(self, url: str) -> dict:
@@ -38,14 +38,14 @@ class GitHubScraper:
         if not username:
             return {"error": "Nieprawidłowy link GitHub!"}
 
-        logging.info(f"Pobieranie danych dla użytkownika: {username}")  # ✅ Logowanie rozpoczęcia pobierania danych
+        logging.info(f"Pobieranie danych dla użytkownika: {username}")  #  Logowanie rozpoczęcia pobierania danych
         
         profile_url = f"https://github.com/{username}"
         repo_url = f"{profile_url}?tab=repositories"
 
         soup = self.get_soup(profile_url)
         if not soup:
-            return {"error": "Nie udało się pobrać strony profilu!"}  # ✅ Obsługa błędu braku danych
+            return {"error": "Nie udało się pobrać strony profilu!"}  #  Obsługa błędu braku danych
 
         # Pobieranie podstawowych informacji o użytkowniku
         followers = soup.select_one('a[href*="?tab=followers"] span.text-bold')
@@ -63,7 +63,7 @@ class GitHubScraper:
         total_repos = int(repositories.text.strip().replace(",", "")) if repositories else 0
 
         # Pobieranie języków repozytoriów
-        repo_languages = self.scrape_languages(repo_url)  # ✅ Przeniesiono logikę do osobnej funkcji
+        repo_languages = self.scrape_languages(repo_url)  #  Przeniesiono logikę do osobnej funkcji
 
         profile_data = {
             "username": username,
@@ -88,7 +88,7 @@ class GitHubScraper:
 
             repo_links = soup.select('a[itemprop="name codeRepository"]')
             if not repo_links:
-                break  # ✅ Obsługa końca listy repozytoriów
+                break  #  Obsługa końca listy repozytoriów
 
             for repo in repo_links:
                 repo_path = repo['href']
@@ -101,7 +101,7 @@ class GitHubScraper:
                 lang = language.text.strip() if language else "Brak informacji"
                 repo_languages[lang] += 1
                 
-                time.sleep(0.5)  # ✅ Dodano ograniczenie zapytań do GitHub
+                time.sleep(0.5)  # ograniczenie zapytań do GitHub
 
             page += 1
 

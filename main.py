@@ -8,7 +8,7 @@ def main(url: str):
 
     scraper = GitHubScraper()
     
-    # ✅ Obsługa błędów podczas scrapowania
+    #  Obsługa błędów podczas scrapowania
     try:
         profile_data = scraper.scrape_github_profile(url)
     except Exception as e:
@@ -17,19 +17,19 @@ def main(url: str):
     if "error" in profile_data:
         return f"❌ {profile_data['error']}", None
 
-    # ✅ Obsługa błędów analizy AI
+    #  Obsługa błędów analizy AI
     try:
         analysis = analyze_with_gemini(profile_data)
     except Exception as e:
         return f"❌ Błąd podczas analizy AI: {e}", None
 
-    # ✅ Obsługa błędów generowania PDF
+    #  Obsługa błędów generowania PDF
     try:
         pdf_file = generate_pdf(profile_data, analysis)
     except Exception as e:
         return f"❌ Błąd podczas generowania PDF: {e}", None
 
-    # ✅ Bezpieczna konwersja danych do Markdown (zapobieganie błędom formatowania)
+    #  Bezpieczna konwersja danych do Markdown (zapobieganie błędom formatowania)
     achievements_text = "\n".join([f"- {achievement}: {count}" for achievement, count in profile_data.get("achievements", {}).items()])
     languages_text = "\n".join([f"- {lang}: {count}" for lang, count in profile_data.get("languages", {}).items()])
 
@@ -57,7 +57,7 @@ def main(url: str):
 
     return summary_text, pdf_file
 
-# ✅ Obsługa błędów uruchamiania aplikacji
+# Obsługa błędów uruchamiania aplikacji
 try:
     demo = gr.Interface(
         fn=main, 
