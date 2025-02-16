@@ -64,9 +64,8 @@ __pycache__/
 ## 🤝 Współtworzenie
 Jeśli chcesz dodać coś od siebie, śmiało otwórz **issue** lub stwórz **pull request**! 💡
 
-## 📜 Licencja
-Projekt dostępny na licencji MIT.
+
 
 ---
 
-🎉 **Dziękuję za zainteresowanie canScrap!**
+🎉 **Dziękuję za zainteresowanie canScrap! Twórca: Rucol**
