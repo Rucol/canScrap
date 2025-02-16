@@ -48,9 +48,6 @@ python main.py
 3. Poczekaj na analizę.
 4. Pobierz gotowy raport PDF!
 
-## 📜 Przykładowy raport
-![Przykładowy PDF](https://via.placeholder.com/800x400.png?text=Przyk%C5%82adowy+Raport+PDF)
-
 ## 🛡 Plik `.gitignore`
 Upewnij się, że plik `.env` nie jest udostępniany publicznie:
 ```
