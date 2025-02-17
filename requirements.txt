@@ -2,4 +2,5 @@ gradio
 requests
 beautifulsoup4
 reportlab
-dotenv
+python-dotenv
+
