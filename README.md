@@ -4,7 +4,7 @@ canScrap to zaawansowany scraper profili GitHub, który wykorzystuje AI do gener
 
 ## 🛠 Funkcjonalności
 - 📌 Pobieranie danych profilu GitHub (bio, followers, liczba repozytoriów, osiągnięcia itp.).
-- 📊 Analiza profilu przy użyciu AI (Google Gemini API).
+- 📊 Analiza profilu przy użyciu AI (Lokalny model Mistral-7B).
 - 📜 Generowanie raportu w formacie PDF.
 - 🎨 Interfejs użytkownika oparty na Gradio.
 
@@ -14,7 +14,8 @@ canScrap to zaawansowany scraper profili GitHub, który wykorzystuje AI do gener
 - **Requests** – pobieranie danych HTTP
 - **Gradio** – interfejs użytkownika 🎨
 - **ReportLab** – generowanie raportów PDF 📄
-- **Google Gemini API** – analiza danych przy użyciu AI 🤖
+- **Mistral-7B** – analiza danych przy użyciu AI 🤖
+- **FastApi** - Stawianie serwera do lokalnego hostowania modelu
 
 ## 📦 Instalacja
 1. **Sklonuj repozytorium:**
@@ -32,29 +33,30 @@ canScrap to zaawansowany scraper profili GitHub, który wykorzystuje AI do gener
    ```bash
    pip install -r requirements.txt
    ```
-4. **Utwórz plik `.env` i dodaj klucz API:**
+4. **Pobierz model mistral-7b:**
+   
+   https://huggingface.co/mistralai/Mistral-7B-v0.1
+5. **Zmień MODEL_PATH w pliku server.py:**
+
    ```
-   GOOGLE_API_KEY=YOUR_GEMINI_API_KEY
+   MODEL_PATH = "D:/Mistral/mistral-7B-v0.1"
    ```
 
 ## 🚀 Uruchomienie
 ```bash
 python main.py
 ```
+oraz serwer w osobnej konsoli:
+```
+py server.py
 
+```
 ## 📄 Przykładowe użycie
 1. Uruchom aplikację.
 2. Wklej link do profilu GitHub w interfejsie Gradio.
 3. Poczekaj na analizę.
 4. Pobierz gotowy raport PDF!
 
-## 🛡 Plik `.gitignore`
-Upewnij się, że plik `.env` nie jest udostępniany publicznie:
-```
-.env
-__pycache__/
-*.log
-```
 
 ## 🏗 TODO / Możliwe ulepszenia
 - [ ] Obsługa API GitHub do bardziej precyzyjnego pobierania danych.
