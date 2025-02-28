@@ -1,5 +1,9 @@
-gradio
 requests
-beautifulsoup4
-reportlab
-dotenv
+fastapi
+pydantic
+uvicorn
+transformers
+torch
+gradio
+bs4
+collections
