@@ -1,7 +1,12 @@
 import gradio as gr
 from scraper import GitHubScraper
-from analyzer import analyze_with_gemini
+from analyzer import analyze_with_mistral
 from report_generator import generate_pdf
+import logging
+
+# Konfiguracja logowania
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def main(urls: str):
     """Główna funkcja aplikacji"""
@@ -16,12 +21,13 @@ def main(urls: str):
             continue
         
         try:
+            logger.info(f"Przetwarzanie URL: {url}")
             profile_data = scraper.scrape_github_profile(url)
             if "error" in profile_data:
                 results.append(f" {profile_data['error']}")
                 continue
             
-            analysis = analyze_with_gemini(profile_data)
+            analysis = analyze_with_mistral(profile_data)
             pdf_file = generate_pdf(profile_data, analysis)
             pdf_files.append(pdf_file)
         
@@ -51,6 +57,7 @@ def main(urls: str):
 """
             results.append(summary_text)
         except Exception as e:
+            logger.error(f"Błąd dla {url}: {e}")
             results.append(f" Błąd dla {url}: {e}")
     
     return "\n\n---\n\n".join(results), pdf_files
@@ -66,4 +73,4 @@ try:
     )
     demo.launch()
 except Exception as e:
-    print(f" Błąd podczas uruchamiania aplikacji: {e}")
+    logger.error(f"Błąd podczas uruchamiania aplikacji: {e}")
